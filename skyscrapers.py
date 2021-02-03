@@ -1,3 +1,8 @@
+"""
+Skyskraper game
+repo on github: https://github.com/Ostap2003/skyscrapers
+"""
+
 def read_input(path: str):
     """
     Read game board file from path.
@@ -28,7 +33,16 @@ def left_to_right_check(input_line: str, pivot: int):
     >>> left_to_right_check("452453*", 5)
     False
     """
-    pass
+    cursor = 0
+    for el in input_line[1:-1]:
+        if int(el) > pivot:
+            return True
+
+        else:
+            cursor += 1
+            left_to_right_check(input_line[cursor:], pivot)
+
+    return False
 
 
 def check_not_finished_board(board: list):
@@ -111,4 +125,5 @@ def check_skyscrapers(input_path: str):
 
 if __name__ == "__main__":
     # print(check_skyscrapers("check.txt"))
-    print(read_input('input.txt'))
+    # print(read_input('input.txt'))
+    print(left_to_right_check("452453*", 5))
