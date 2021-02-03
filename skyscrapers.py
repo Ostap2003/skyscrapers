@@ -58,7 +58,11 @@ def check_not_finished_board(board: list):
     >>> check_not_finished_board(['***21**', '412453*', '423145*', '*5?3215', '*35214*', '*41532*', '*2*1***'])
     False
     """
-    pass
+    for line in board:
+        if '?' in line:
+            return False
+
+    return True
 
 
 def check_uniqueness_in_rows(board: list):
@@ -74,7 +78,16 @@ def check_uniqueness_in_rows(board: list):
     >>> check_uniqueness_in_rows(['***21**', '412453*', '423145*', '*553215', '*35214*', '*41532*', '*2*1***'])
     False
     """
-    pass
+    for row in range(1, len(board[:-1])):
+        row_num_entry = set()
+        for el in board[row][1:-1]:
+            if el in row_num_entry:
+                return False
+
+            else:
+                row_num_entry.add(el)
+
+    return True
 
 
 def check_horizontal_visibility(board: list):
@@ -126,4 +139,6 @@ def check_skyscrapers(input_path: str):
 if __name__ == "__main__":
     # print(check_skyscrapers("check.txt"))
     # print(read_input('input.txt'))
-    print(left_to_right_check("452453*", 5))
+    # print(left_to_right_check("452453*", 5))
+    # print(check_not_finished_board(['***21**', '412453*', '423145*', '*503215', '*35214*', '*41532*', '*2*1***']))
+    print(check_uniqueness_in_rows(['***21**', '412453*', '423145*', '*553215', '*35214*', '*41532*', '*2*1***']))
