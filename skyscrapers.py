@@ -121,7 +121,15 @@ def check_columns(board: list):
     >>> check_columns(['***21**', '412553*', '423145*', '*543215', '*35214*', '*41532*', '*2*1***'])
     False
     """
-    pass
+    for row in range(1, len(board[:-1])):
+        col_num_entry = set()
+        for col in range(1, len(board[:-1])):
+            if int(board[col][row]) in col_num_entry:
+                return False
+            else:
+                col_num_entry.add(int(board[col][row]))
+
+    return True
 
 
 def check_skyscrapers(input_path: str):
@@ -137,8 +145,13 @@ def check_skyscrapers(input_path: str):
 
 
 if __name__ == "__main__":
-    # print(check_skyscrapers("check.txt"))
     # print(read_input('input.txt'))
+
     # print(left_to_right_check("452453*", 5))
+
     # print(check_not_finished_board(['***21**', '412453*', '423145*', '*503215', '*35214*', '*41532*', '*2*1***']))
-    print(check_uniqueness_in_rows(['***21**', '412453*', '423145*', '*553215', '*35214*', '*41532*', '*2*1***']))
+
+    # print(check_uniqueness_in_rows(['***21**', '412453*', '423145*', '*553215', '*35214*', '*41532*', '*2*1***']))
+
+    # print(check_columns(['***21**', '412453*', '423145*', '*543215', '*35214*', '*41532*', '*2*1***']))
+    # print(check_columns(['***21**', '412553*', '423145*', '*543215', '*35214*', '*41532*', '*2*1***']))
