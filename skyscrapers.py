@@ -116,11 +116,11 @@ def check_horizontal_visibility(board: list):
     for row in range(1, len(board[:-1])):
         try:
             if left_to_right_check(board[row], int(board[row][0])):
-                if isinstance(int(board[row][-1]), int) == True:
+                if isinstance(int(board[row][-1]), int):
                     # print('reversed = ', board[row][::-1])
-                    if left_to_right_check(board[row][::-1], int(board[row][0])) == False:
+                    if not left_to_right_check(board[row][::-1], int(board[row][0])):
                         return False
-            
+
             else:
                 return False
 
@@ -132,7 +132,8 @@ def check_horizontal_visibility(board: list):
 
 def check_columns(board: list):
     """
-    Check column-wise compliance of the board for uniqueness (buildings of unique height) and visibility (top-bottom and vice versa).
+    Check column-wise compliance of the board for uniqueness
+    (buildings of unique height) and visibility (top-bottom and vice versa).
 
     Same as for horizontal cases, but aggregated in one function for vertical case, i.e. columns.
 
@@ -151,7 +152,7 @@ def check_columns(board: list):
                 return False
             else:
                 col_num_entry.add(int(board[col][row]))
-    
+
     # check visibility
     # check top-down
     for el in range(len(board)):
@@ -170,7 +171,7 @@ def check_columns(board: list):
     for el in range(len(board)):
         try:
             if isinstance(int(board[-1][el]), int):
-                bottom_up = ''.join([board[row][el] for row in range(len(board))][::-1])  # reverse to pass to the left_to_right_check
+                bottom_up = ''.join([board[row][el] for row in range(len(board))][::-1])
                 if left_to_right_check(bottom_up, int(bottom_up[0])):
                     pass
                 else:
@@ -197,30 +198,5 @@ def check_skyscrapers(input_path: str):
             if check_horizontal_visibility(board):
                 if check_columns(board):
                     return True
-    
+
     return False
-
-
-if __name__ == "__main__":
-    # print(read_input('input.txt'))
-
-    # print(left_to_right_check("452453*", 5))  # False
-    # print(left_to_right_check("412453*", 4))  # True
-    # print(left_to_right_check('2413251', 2))  # True
-    # print(left_to_right_check('423145*', 4))  # True
-    # print(left_to_right_check('512345*', 5))  # True
-
-    # print(check_not_finished_board(['***21**', '412453*', '423145*', '*503215', '*35214*', '*41532*', '*2*1***']))
-
-    # print(check_uniqueness_in_rows(['***21**', '412453*', '423145*', '*553215', '*35214*', '*41532*', '*2*1***']))
-
-
-    # print(check_columns(['***21**', '412453*', '423145*', '*543215', '*35214*', '*41532*', '*2*1***']))  # True
-    # print(check_columns(['***21**', '412453*', '423145*', '*543215', '*35214*', '*41232*', '*2*1***']))  # False
-    # print(check_columns(['***21**', '412553*', '423145*', '*543215', '*35214*', '*41532*', '*2*1***']))  # False
-    
-    # print(check_horizontal_visibility(['***21**', '412453*', '423145*', '*543215', '*35214*', '*41532*', '*2*1***']))  # True
-    # print(check_horizontal_visibility(['***21**', '452453*', '423145*', '*543215', '*35214*', '*41532*', '*2*1***']))  # False
-    # print(check_horizontal_visibility(['***21**', '452413*', '423145*', '*543215', '*35214*', '*41532*', '*2*1***']))  # False
-
-    print(check_skyscrapers('input.txt'))
