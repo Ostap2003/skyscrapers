@@ -14,12 +14,15 @@ def read_input(path: str):
     board = []
     with open(path, 'r', encoding='utf-8') as board_fl:
         for line in board_fl:
-            board.append(line[:-1])
+            if '\n' in line:
+                board.append(line[:-1])
+            else:
+                board.append(line)
 
     return board
 
 
-def left_to_right_check(input_line: str, pivot: int):
+def left_to_right_check(input_line: str, pivot: int, depth=0):
     """
     Check row-wise visibility from left to right.
     Return True if number of building from the left-most hint is visible looking to the right,
@@ -32,24 +35,22 @@ def left_to_right_check(input_line: str, pivot: int):
     True
     >>> left_to_right_check("452453*", 5)
     False
-    >>> left_to_right_check('2 41325 1', 2))
+    >>> left_to_right_check('423145 *', 4)
     True
     """
-    max_el_id = input_line.find(max(input_line[1:-1]))
-    if max_el_id == 1:
-        return 1 == pivot
+    if len(input_line) == 0:
+        return 0
+    elif depth == 0:
+        max_el = max(input_line[1:-1])
+        max_el_id = input_line[1:-1].find(max_el) + 1  # add 1 so indexing doesn't get affected by slicing
+        # print(input_line[1:max_el_id], 'max =', max_el, 'id =', max_el_id)
+        return len(max_el) + left_to_right_check(input_line[1:max_el_id], pivot, depth+1) == pivot
+    else:
+        max_el = max(input_line)
+        max_el_id = input_line.find(max_el)
 
-    max_el_inside = max(input_line[1:max_el_id])
-    max_el_inside_id = input_line[1:-1].find(max_el_inside) + 1
-    
-    visible = 0
-    for el in range(len(input_line[1:max_el_id + 1])):
-        if (input_line[el] <= max_el_inside) and (el <= max_el_inside_id):
-            visible += 1
-        elif (input_line[el] > max_el_inside) and (el > max_el_inside_id):
-            visible += 1
-
-    return pivot == visible
+    # print(input_line[1:max_el_id], 'max =', max_el, 'id =', max_el_id)
+    return len(max_el) + left_to_right_check(input_line[:max_el_id], pivot, depth+1)
 
 
 def check_not_finished_board(board: list):
@@ -112,7 +113,21 @@ def check_horizontal_visibility(board: list):
     >>> check_horizontal_visibility(['***21**', '452413*', '423145*', '*543215', '*35214*', '*41532*', '*2*1***'])
     False
     """
-    pass
+    for row in range(1, len(board[:-1])):
+        try:
+            if left_to_right_check(board[row], int(board[row][0])):
+                if isinstance(int(board[row][-1]), int) == True:
+                    # print('reversed = ', board[row][::-1])
+                    if left_to_right_check(board[row][::-1], int(board[row][0])) == False:
+                        return False
+            
+            else:
+                return False
+
+        except ValueError:
+            pass
+
+    return True
 
 
 def check_columns(board: list):
@@ -138,11 +153,11 @@ def check_columns(board: list):
                 col_num_entry.add(int(board[col][row]))
     
     # check visibility
+    # check top-down
     for el in range(len(board)):
         try:
             if isinstance(int(board[0][el]), int):
                 top_down = ''.join([board[row][el] for row in range(len(board))])
-                # print('top-down = ', top_down)
                 if left_to_right_check(top_down, int(top_down[0])):
                     pass
                 else:
@@ -150,12 +165,12 @@ def check_columns(board: list):
 
         except ValueError:
             pass
-    
+
+    # check bottom-up
     for el in range(len(board)):
         try:
             if isinstance(int(board[-1][el]), int):
-                bottom_up = ''.join([board[row][el] for row in range(len(board))][::-1]) # reverse to pass to the left_to_right_check
-                # print('bottom_up = ', bottom_up)
+                bottom_up = ''.join([board[row][el] for row in range(len(board))][::-1])  # reverse to pass to the left_to_right_check
                 if left_to_right_check(bottom_up, int(bottom_up[0])):
                     pass
                 else:
@@ -176,7 +191,14 @@ def check_skyscrapers(input_path: str):
     >>> check_skyscrapers("check.txt")
     True
     """
-    pass
+    board = read_input(input_path)
+    if check_not_finished_board(board):
+        if check_uniqueness_in_rows(board):
+            if check_horizontal_visibility(board):
+                if check_columns(board):
+                    return True
+    
+    return False
 
 
 if __name__ == "__main__":
@@ -185,6 +207,8 @@ if __name__ == "__main__":
     # print(left_to_right_check("452453*", 5))  # False
     # print(left_to_right_check("412453*", 4))  # True
     # print(left_to_right_check('2413251', 2))  # True
+    # print(left_to_right_check('423145*', 4))  # True
+    # print(left_to_right_check('512345*', 5))  # True
 
     # print(check_not_finished_board(['***21**', '412453*', '423145*', '*503215', '*35214*', '*41532*', '*2*1***']))
 
@@ -194,3 +218,9 @@ if __name__ == "__main__":
     # print(check_columns(['***21**', '412453*', '423145*', '*543215', '*35214*', '*41532*', '*2*1***']))  # True
     # print(check_columns(['***21**', '412453*', '423145*', '*543215', '*35214*', '*41232*', '*2*1***']))  # False
     # print(check_columns(['***21**', '412553*', '423145*', '*543215', '*35214*', '*41532*', '*2*1***']))  # False
+    
+    # print(check_horizontal_visibility(['***21**', '412453*', '423145*', '*543215', '*35214*', '*41532*', '*2*1***']))  # True
+    # print(check_horizontal_visibility(['***21**', '452453*', '423145*', '*543215', '*35214*', '*41532*', '*2*1***']))  # False
+    # print(check_horizontal_visibility(['***21**', '452413*', '423145*', '*543215', '*35214*', '*41532*', '*2*1***']))  # False
+
+    print(check_skyscrapers('input.txt'))
