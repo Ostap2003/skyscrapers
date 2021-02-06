@@ -4,9 +4,8 @@
 
 You can find some tests in **data** folder.
 
-<br></br>
 
-#### Short explanation of the rules:
+### Short explanation of the rules:
 
 Skyscrapers is a logic game of the placement of houses. In this game you need to place houses of different heights on the game board, so that the number of visible houses from a certain position (the number with the arrow is a hint) was equal to the number in the hint. The arrow indicates the direction in which you want to look.
 
@@ -23,7 +22,7 @@ So, the game board is a square N x N, with hints on the sides. The object of the
 - No two skyscrapers in the column were the same height.
 - The number of visible skyscrapers from a certain direction (hint with an arrow) was equal to the number in the hint. Note that the taller skyscrapers obscure the visibility of the lower skyscrapers behind the taller skyscrapers.
 
-#### Example of the game board:
+### Example of the game board:
 
 <div align=left>
     <img src='https://lh5.googleusercontent.com/Zg_CsfS_CF_8iU9gzEPdrPRMTLOQKSNTMdX1fUwr5RUqeHc8vNplbhCKQw0cfwKlfo5plEBkH8LmUzi90NqIur_uI3tYyCZeKpKBSNdwMxTrH_nO3BadBRwCPgs9vI1JsiS_x8tf'>
